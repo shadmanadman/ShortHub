@@ -1,4 +1,4 @@
-package org.kmp.playground.shorthub.pref
+package org.kmp.playground.shorthub.pref.presentation.ui
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
@@ -14,10 +14,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.kmp.playground.shorthub.pref.presentation.PrefsIntent
+import org.kmp.playground.shorthub.pref.presentation.PrefsViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun PrefsScene() {
+fun PrefsScene(
+    viewModel: PrefsViewModel = koinViewModel()
+) {
+    val state by viewModel.state.collectAsState()
     val infiniteTransition = rememberInfiniteTransition(label = "backgroundAnimation")
+    
     val color1 by infiniteTransition.animateColor(
         initialValue = MaterialTheme.colorScheme.surface,
         targetValue = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
@@ -47,7 +54,6 @@ fun PrefsScene() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Title
             Text(
                 text = "ShortHub",
                 style = TextStyle(
@@ -65,11 +71,11 @@ fun PrefsScene() {
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Shortcut Options
             ShortcutOptionItem(
                 title = "Global Add Shortcut",
                 description = "Hotkey to quickly add a new shortcut",
-                currentShortcut = "Ctrl + Alt + A"
+                currentShortcut = state.prefs.addNewShortcut,
+                onShortcutChange = { viewModel.onIntent(PrefsIntent.UpdateAddShortcut(it)) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -77,7 +83,8 @@ fun PrefsScene() {
             ShortcutOptionItem(
                 title = "Search Shortcuts",
                 description = "Hotkey to open the search overlay",
-                currentShortcut = "Ctrl + Space"
+                currentShortcut = state.prefs.searchShortcut,
+                onShortcutChange = { viewModel.onIntent(PrefsIntent.UpdateSearchShortcut(it)) }
             )
         }
     }
@@ -87,7 +94,8 @@ fun PrefsScene() {
 private fun ShortcutOptionItem(
     title: String,
     description: String,
-    currentShortcut: String
+    currentShortcut: String,
+    onShortcutChange: (String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -134,7 +142,10 @@ private fun ShortcutOptionItem(
             }
 
             Button(
-                onClick = { /* TODO: Implement shortcut recorder */ },
+                onClick = { 
+                    // Simulating a change for now
+                    onShortcutChange("Ctrl+Shift+X") 
+                },
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Change")
