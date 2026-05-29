@@ -49,12 +49,18 @@ class AddViewModel(
             if (event.metaPressed) append("Meta+")
             append(event.key)
         }
-        _state.update { it.copy(isRecording = false, recordedShortcut = shortcut) }
+        _state.update { it.copy(recordedShortcut = shortcut) }
+    }
+
+    fun stopRecording() {
+        _state.update { it.copy(isRecording = false) }
+        navigationService.setRecording(false)
     }
 
     fun startRecording() {
-        _state.update { it.copy(isRecording = true) }
+        _state.update { it.copy(isRecording = true, recordedShortcut = "") }
         inputObserver.start()
+        navigationService.setRecording(true)
     }
 
     fun onIntent(intent: AddIntent) {
@@ -70,7 +76,8 @@ class AddViewModel(
             _state.update { it.copy(isLoading = true) }
             try {
                 repository.addShortcut(Shortcut(title = title, shortcut = shortcut))
-                _state.update { it.copy(isVisible = false, isLoading = false) }
+                _state.update { it.copy(isLoading = false) }
+                navigationService.hideAll()
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message, isLoading = false) }
             }

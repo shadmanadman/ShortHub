@@ -26,7 +26,13 @@ fun AddShortcutScene(
         isVisible = state.isVisible,
         recordedShortcut = state.recordedShortcut,
         isRecording = state.isRecording,
-        onStartRecording = { viewModel.startRecording() },
+        onToggleRecording = {
+            if (state.isRecording) {
+                viewModel.stopRecording()
+            } else {
+                viewModel.startRecording()
+            }
+        },
         onDismiss = { viewModel.onIntent(AddIntent.Dismiss) },
         onSave = { title, shortcut -> 
             viewModel.onIntent(AddIntent.SaveShortcut(title, shortcut))
@@ -39,7 +45,7 @@ fun AddShortcutPopup(
     isVisible: Boolean,
     recordedShortcut: String,
     isRecording: Boolean,
-    onStartRecording: () -> Unit,
+    onToggleRecording: () -> Unit,
     onDismiss: () -> Unit,
     onSave: (title: String, action: String) -> Unit
 ) {
@@ -103,14 +109,14 @@ fun AddShortcutPopup(
                         singleLine = true,
                         trailingIcon = {
                             Button(
-                                onClick = onStartRecording,
+                                onClick = onToggleRecording,
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
                                 ),
                                 shape = RoundedCornerShape(8.dp),
                                 modifier = Modifier.padding(end = 4.dp)
                             ) {
-                                Text(if (isRecording) "Recording..." else "Record")
+                                Text(if (isRecording) "Save" else "Record")
                             }
                         }
                     )
