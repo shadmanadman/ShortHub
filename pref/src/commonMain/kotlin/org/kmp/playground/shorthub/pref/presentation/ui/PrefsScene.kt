@@ -14,7 +14,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.kmp.playground.shorthub.pref.presentation.PrefsIntent
 import org.kmp.playground.shorthub.pref.presentation.PrefsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -75,7 +74,7 @@ fun PrefsScene(
                 title = "Global Add Shortcut",
                 description = "Hotkey to quickly add a new shortcut",
                 currentShortcut = state.prefs.addNewShortcut,
-                onShortcutChange = { viewModel.startRecording(PrefsViewModel.RecordingTarget.AddShortcut) }
+                onClick = { viewModel.startRecording(PrefsViewModel.RecordingTarget.AddShortcut) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -84,7 +83,7 @@ fun PrefsScene(
                 title = "Search Shortcuts",
                 description = "Hotkey to open the search overlay",
                 currentShortcut = state.prefs.searchShortcut,
-                onShortcutChange = { viewModel.startRecording(PrefsViewModel.RecordingTarget.SearchShortcut) }
+                onClick = { viewModel.startRecording(PrefsViewModel.RecordingTarget.SearchShortcut) }
             )
         }
     }
@@ -95,7 +94,7 @@ private fun ShortcutOptionItem(
     title: String,
     description: String,
     currentShortcut: String,
-    onShortcutChange: (String) -> Unit
+    onClick: () -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -142,10 +141,7 @@ private fun ShortcutOptionItem(
             }
 
             Button(
-                onClick = { 
-                    // Simulating a change for now
-                    onShortcutChange("Ctrl+Shift+X") 
-                },
+                onClick = onClick,
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Change")

@@ -10,6 +10,9 @@ class NavigationService {
     private val _isSearchVisible = MutableStateFlow(false)
     val isSearchVisible = _isSearchVisible.asStateFlow()
 
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording = _isRecording.asStateFlow()
+
     fun showAdd() {
         _isAddVisible.value = true
         _isSearchVisible.value = false
@@ -23,5 +26,10 @@ class NavigationService {
     fun hideAll() {
         _isAddVisible.value = false
         _isSearchVisible.value = false
+        _isRecording.value = false
+    }
+
+    fun setRecording(recording: Boolean) {
+        _isRecording.value = recording
     }
 }

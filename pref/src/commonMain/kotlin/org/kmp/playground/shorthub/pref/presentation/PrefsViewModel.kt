@@ -6,10 +6,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.kmp.playground.shorthub.db.domain.repository.ShortcutRepository
 import org.kmp.playground.shorthub.shared.observation.InputObserver
+import org.kmp.playground.shorthub.shared.ui.NavigationService
 
 class PrefsViewModel(
     private val repository: ShortcutRepository,
-    private val inputObserver: InputObserver
+    private val inputObserver: InputObserver,
+    private val navigationService: NavigationService
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PrefsState())
@@ -53,6 +55,7 @@ class PrefsViewModel(
         }
         recordingTarget = null
         inputObserver.stop()
+        navigationService.setRecording(false)
     }
 
     fun onIntent(intent: PrefsIntent) {
@@ -69,6 +72,7 @@ class PrefsViewModel(
     fun startRecording(target: RecordingTarget) {
         recordingTarget = target
         inputObserver.start()
+        navigationService.setRecording(true)
     }
 
     private fun updatePrefs(reducer: (org.kmp.playground.shorthub.db.domain.model.ShortcutPrefs) -> org.kmp.playground.shorthub.db.domain.model.ShortcutPrefs) {
