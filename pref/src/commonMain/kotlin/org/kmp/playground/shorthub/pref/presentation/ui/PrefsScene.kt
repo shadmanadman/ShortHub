@@ -75,7 +75,7 @@ fun PrefsScene(
                 title = "Global Add Shortcut",
                 description = "Hotkey to quickly add a new shortcut",
                 currentShortcut = state.prefs.addNewShortcut,
-                onShortcutChange = { viewModel.onIntent(PrefsIntent.UpdateAddShortcut(it)) }
+                onShortcutChange = { viewModel.startRecording(PrefsViewModel.RecordingTarget.AddShortcut) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -84,7 +84,7 @@ fun PrefsScene(
                 title = "Search Shortcuts",
                 description = "Hotkey to open the search overlay",
                 currentShortcut = state.prefs.searchShortcut,
-                onShortcutChange = { viewModel.onIntent(PrefsIntent.UpdateSearchShortcut(it)) }
+                onShortcutChange = { viewModel.startRecording(PrefsViewModel.RecordingTarget.SearchShortcut) }
             )
         }
     }

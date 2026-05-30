@@ -24,6 +24,9 @@ fun AddShortcutScene(
     
     AddShortcutPopup(
         isVisible = state.isVisible,
+        recordedShortcut = state.recordedShortcut,
+        isRecording = state.isRecording,
+        onStartRecording = { viewModel.startRecording() },
         onDismiss = { viewModel.onIntent(AddIntent.Dismiss) },
         onSave = { title, shortcut -> 
             viewModel.onIntent(AddIntent.SaveShortcut(title, shortcut))
@@ -34,6 +37,9 @@ fun AddShortcutScene(
 @Composable
 fun AddShortcutPopup(
     isVisible: Boolean,
+    recordedShortcut: String,
+    isRecording: Boolean,
+    onStartRecording: () -> Unit,
     onDismiss: () -> Unit,
     onSave: (title: String, action: String) -> Unit
 ) {
@@ -75,7 +81,7 @@ fun AddShortcutPopup(
                     )
 
                     var title by remember { mutableStateOf("") }
-                    var action by remember { mutableStateOf("") }
+                    var action by remember(recordedShortcut) { mutableStateOf(recordedShortcut) }
 
                     OutlinedTextField(
                         value = title,
@@ -94,7 +100,19 @@ fun AddShortcutPopup(
                         placeholder = { Text("e.g. CMD + SHIFT + T") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        singleLine = true
+                        singleLine = true,
+                        trailingIcon = {
+                            Button(
+                                onClick = onStartRecording,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.padding(end = 4.dp)
+                            ) {
+                                Text(if (isRecording) "Recording..." else "Record")
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

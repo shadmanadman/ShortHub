@@ -26,6 +26,7 @@ kotlin {
             implementation(project(":db"))
             implementation(project(":hub"))
             implementation(project(":pref"))
+            implementation(project(":shared"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
